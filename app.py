@@ -151,8 +151,6 @@ def update_cpu_graph(container):
 
 update_cpu_graph(cpu_graph_container)
 
-st.header("Enter Laptop Specifications")
-
 brands_options = ["Razer", "Asus", "Lenovo", "Acer", "Dell", "Microsoft", "HP", "Samsung", "MSI"]
 processors_options = ["AMD Ryzen 7", "Intel i5", "Intel i3", "AMD Ryzen 3", "AMD Ryzen 9", "AMD Ryzen 5", "Intel i9",
                       "Intel i7"]
@@ -164,16 +162,25 @@ screen_sizes_options = [13.3, 14, 15.6, 16, 17.3]
 resolutions_options = ["1366x768", "1920x1080", "2560x1440", "3840x2160"]
 oss_options = ["Linux", "FreeDOS", "Windows"]
 
-brand = st.selectbox("Brand", brands_options)
-processor = st.selectbox("Processor", processors_options)
-ram = st.selectbox("RAM (GB)", rams_options)
-storage = st.selectbox("Storage", storages_options)
-gpu = st.selectbox("GPU", gpus_options)
-screen_size = st.selectbox("Screen Size (inches)", screen_sizes_options)
-resolution = st.selectbox("Resolution", resolutions_options)
-operating_system = st.selectbox("Operating System", oss_options)
-battery_life = st.number_input("Battery Life (hours)", min_value=0.0, step=0.1)
-weight = st.number_input("Weight (kg)", min_value=0.0, step=0.1)
+st.header("Enter Laptop Specifications")
+
+col1, col2, col3, col4, col5 = st.columns([1.5, 1.5, 1.5, 1.5, 1.5])
+with col1:
+    brand = st.selectbox("Brand", brands_options)
+    storage = st.selectbox("Storage", storages_options)
+with col2:
+    processor = st.selectbox("Processor", processors_options)
+    gpu = st.selectbox("GPU", gpus_options)
+with col3:
+    ram = st.selectbox("RAM (GB)", rams_options)
+    screen_size = st.selectbox("Screen Size (inches)", screen_sizes_options)
+with col4:
+    resolution = st.selectbox("Resolution", resolutions_options)
+    operating_system = st.selectbox("Operating System", oss_options)
+with col5:
+    battery_life = st.number_input("Battery Life (hours)", min_value=0.0, step=0.1)
+    weight = st.number_input("Weight (kg)", min_value=0.0, step=0.1)
+
 
 
 def save_submission(record):
