@@ -8,6 +8,8 @@ import os
 
 from authentication import login_signup
 
+st.set_page_config(layout='wide')
+
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
     st.session_state.username = ""
