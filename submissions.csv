@@ -7,3 +7,8 @@ Razer,Intel i9,4,1TB SSD,Nvidia RTX 3080,13.3,1366x768,4.0,1.0,Linux
 Razer,AMD Ryzen 7,4,1TB SSD,Nvidia RTX 3080,13.3,1366x768,7.0,2.0,Linux
 Razer,AMD Ryzen 5,4,1TB SSD,Nvidia RTX 3080,13.3,1366x768,0.0,0.0,Linux
 Razer,AMD Ryzen 3,4,1TB SSD,Nvidia RTX 3080,13.3,1366x768,5.0,2.4,Linux
+Acer,AMD Ryzen 5,8,256GB SSD,Nvidia GTX 1650,15.6,1920x1080,5.0,2.0,FreeDOS
+HP,AMD Ryzen 5,8,512GB SSD,Nvidia RTX 2060,15.6,1920x1080,5.0,2.0,FreeDOS
+Acer,Intel i3,4,256GB SSD,Nvidia RTX 3080,13.3,1366x768,4.0,1.0,Linux
+Dell,Intel i3,4,2TB SSD,Nvidia RTX 3080,13.3,1366x768,5.0,5.0,Linux
+Acer,Intel i3,4,256GB SSD,Nvidia RTX 3080,13.3,1366x768,0.0,0.0,Windows

@@ -5,19 +5,32 @@ import pandas as pd
 import plotly.express as px
 import re
 import os
+import time  # For animation delays
 
 from authentication import login_signup
 
 st.set_page_config(layout='wide')
 
+# Initialize session state variables if they don't exist.
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
     st.session_state.username = ""
 
+# If not logged in, show the login/signup form.
 if not st.session_state.authenticated:
     login_signup()
-    st.stop()
+    # If the user just logged in, immediately reload the app.
+    if st.session_state.authenticated:
+        if hasattr(st, "experimental_rerun"):
+            st.experimental_rerun()
+        else:
+            st.write("Please refresh the page to continue.")
+    else:
+        st.stop()
 
+# If logged in, show the main application.
+
+# Top right logout button
 col1, col2 = st.columns([4, 1])
 with col2:
     st.markdown(f"**Logged in as: {st.session_state.username}**")
@@ -26,6 +39,8 @@ with col2:
         st.session_state.username = ""
         if hasattr(st, "experimental_rerun"):
             st.experimental_rerun()
+        else:
+            st.write("Please refresh the page to log out.")
 
 API_URL = 'http://060fd6ad-695f-4ef8-a9b2-24f8243c2f3d.eastus2.azurecontainer.io/score'
 API_KEY = 'aMv3SZnrX4pkyuwhigofZ3mRG2dvhS2B'  # Replace with your actual API key if needed
@@ -41,6 +56,7 @@ It also saves your submission and displays sidebar graphs:
 - **Average Price by Brand** (each brand in a different color)
 - **Price vs. RAM**
 - **5 Most Popular CPUs from Submissions**
+- **Operating System Distribution**
 
 The machine learning models are deployed on Azure Machine Learning.
 """)
@@ -94,8 +110,10 @@ def load_data():
 
     return data
 
+
 df = load_data()
 
+# Sidebar graph: Average Price by Brand
 if "Brand" in df.columns and "Price_$" in df.columns:
     price_by_brand = df.groupby("Brand")["Price_$"].mean().reset_index()
     fig_brand = px.bar(
@@ -110,6 +128,7 @@ if "Brand" in df.columns and "Price_$" in df.columns:
 else:
     st.sidebar.error("Required columns for brand analysis not found.")
 
+# Sidebar graph: Price vs. RAM
 if "RAM_GB" in df.columns and "Price_$" in df.columns:
     fig_ram = px.scatter(
         df,
@@ -123,7 +142,9 @@ if "RAM_GB" in df.columns and "Price_$" in df.columns:
 else:
     st.sidebar.error("Required columns for RAM analysis not found.")
 
+# Sidebar chart: 5 Most Popular CPUs from Submissions
 cpu_graph_container = st.sidebar.empty()
+
 
 def update_cpu_graph(container):
     if os.path.exists(SUBMISSIONS_FILE):
@@ -151,14 +172,50 @@ def update_cpu_graph(container):
     else:
         container.info("No submission data yet for CPU popularity.")
 
+
 update_cpu_graph(cpu_graph_container)
 
+# Sidebar chart: Operating System Distribution (Donut Chart)
+os_chart_container = st.sidebar.empty()
+
+
+def update_os_chart(container):
+    if os.path.exists(SUBMISSIONS_FILE):
+        submissions_df = pd.read_csv(SUBMISSIONS_FILE)
+    else:
+        submissions_df = pd.DataFrame()
+
+    if not submissions_df.empty and "Operating_System" in submissions_df.columns:
+        os_counts = submissions_df["Operating_System"].value_counts().reset_index()
+        os_counts.columns = ["Operating_System", "Count"]
+        fig_os = px.pie(
+            os_counts,
+            values="Count",
+            names="Operating_System",
+            title="Operating System Distribution",
+            color="Operating_System",
+            color_discrete_map={
+                "Linux": "orange",
+                "FreeDOS": "grey",
+                "Windows": "lightblue"
+            }
+        )
+        fig_os.update_traces(hole=0.4, hoverinfo="label+percent+name")
+        container.plotly_chart(fig_os, use_container_width=True)
+    else:
+        container.info("No submission data yet for OS distribution.")
+
+
+update_os_chart(os_chart_container)
+
+# Define input options
 brands_options = ["Acer", "Asus", "Dell", "HP", "Lenovo", "Microsoft", "MSI", "Razer", "Samsung"]
-processors_options = ["Intel i3","Intel i5","Intel i7", "Intel i9","AMD Ryzen 3","AMD Ryzen 5", "AMD Ryzen 7", "AMD Ryzen 9"]
+processors_options = ["Intel i3", "Intel i5", "Intel i7", "Intel i9",
+                      "AMD Ryzen 3", "AMD Ryzen 5", "AMD Ryzen 7", "AMD Ryzen 9"]
 rams_options = [4, 8, 16, 32, 64]
-storages_options = ["256GB SSD","512GB SSD","1TB SSD", "2TB SSD",  "1TB HDD"]
-gpus_options = ["Nvidia RTX 3080", "Nvidia RTX 3060", "AMD Radeon RX 6600", "Nvidia RTX 2060", "AMD Radeon RX 6800",
-                "Nvidia GTX 1650", "Integrated"]
+storages_options = ["256GB SSD", "512GB SSD", "1TB SSD", "2TB SSD", "1TB HDD"]
+gpus_options = ["Nvidia RTX 3080", "Nvidia RTX 3060", "AMD Radeon RX 6600",
+                "Nvidia RTX 2060", "AMD Radeon RX 6800", "Nvidia GTX 1650", "Integrated"]
 screen_sizes_options = [13.3, 14, 15.6, 16, 17.3]
 resolutions_options = ["1366x768", "1920x1080", "2560x1440", "3840x2160"]
 oss_options = ["Linux", "FreeDOS", "Windows"]
@@ -181,7 +238,6 @@ with col4:
 with col5:
     battery_life = st.number_input("Battery Life (hours)", min_value=0.0, step=0.1)
     weight = st.number_input("Weight (kg)", min_value=0.0, step=0.1)
-
 
 
 def save_submission(record):
@@ -220,17 +276,34 @@ if st.button("Submit"):
     }
 
     try:
-        response = requests.post(API_URL, data=json.dumps(payload), headers=headers)
+        with st.spinner("Submitting your specs and predicting the price..."):
+            response = requests.post(API_URL, data=json.dumps(payload), headers=headers)
+            time.sleep(1)  # Simulate a short delay for spinner effect
+    except Exception as e:
+        st.error(f"An error occurred: {e}")
+    else:
         if response.status_code == 200:
             result = response.json()
             # Extract the predicted price from the response.
-            predicted_value = result["Results"]["WebServiceOutput0"][0]["Scored Labels"]
-            st.success(f"Predicted Price: ${predicted_value:,.2f}")
+            try:
+                predicted_value = float(result["Results"]["WebServiceOutput0"][0]["Scored Labels"])
+            except Exception as e:
+                st.error(f"Error parsing prediction result: {e}")
+                predicted_value = None
+
+            if predicted_value is not None:
+                # Animate the predicted price reveal
+                price_placeholder = st.empty()
+                steps = 50  # Number of animation steps
+                for i in range(steps):
+                    animated_price = predicted_value * (i + 1) / steps
+                    price_placeholder.markdown(f"**Predicted Price: ${animated_price:,.2f}**")
+                    time.sleep(0.05)
+                # Ensure the final predicted price is displayed
+                price_placeholder.markdown(f"**Predicted Price: ${predicted_value:,.2f}**")
         else:
             st.error("Error: " + str(response.status_code))
             st.text(response.text)
-    except Exception as e:
-        st.error(f"An error occurred: {e}")
 
     submission_record = {
         "Brand": brand,
@@ -245,5 +318,5 @@ if st.button("Submit"):
         "Operating_System": operating_system
     }
     save_submission(submission_record)
-
     update_cpu_graph(cpu_graph_container)
+    update_os_chart(os_chart_container)

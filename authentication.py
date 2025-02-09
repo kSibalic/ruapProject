@@ -19,7 +19,6 @@ def save_user(username, password):
     else:
         new_user.to_csv(USERS_FILE, mode="w", index=False, header=True)
 
-
 def login_signup():
     st.sidebar.title("User Authentication")
     auth_mode = st.sidebar.radio("Select Option", ["Login", "Sign Up"])
@@ -33,8 +32,6 @@ def login_signup():
                 st.session_state.authenticated = True
                 st.session_state.username = username
                 st.sidebar.success(f"Logged in as {username}")
-                if hasattr(st, "experimental_rerun"):
-                    st.experimental_rerun()
             else:
                 st.sidebar.error("Invalid username or password")
 
@@ -54,5 +51,3 @@ def login_signup():
                     st.session_state.authenticated = True
                     st.session_state.username = new_username
                     st.sidebar.success(f"Account created and logged in as {new_username}")
-                    if hasattr(st, "experimental_rerun"):
-                        st.experimental_rerun()
