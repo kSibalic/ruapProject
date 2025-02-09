@@ -151,11 +151,10 @@ def update_cpu_graph(container):
 
 update_cpu_graph(cpu_graph_container)
 
-brands_options = ["Razer", "Asus", "Lenovo", "Acer", "Dell", "Microsoft", "HP", "Samsung", "MSI"]
-processors_options = ["AMD Ryzen 7", "Intel i5", "Intel i3", "AMD Ryzen 3", "AMD Ryzen 9", "AMD Ryzen 5", "Intel i9",
-                      "Intel i7"]
+brands_options = ["Acer", "Asus", "Dell", "HP", "Lenovo", "Microsoft", "MSI", "Razer", "Samsung"]
+processors_options = ["Intel i3","Intel i5","Intel i7", "Intel i9","AMD Ryzen 3","AMD Ryzen 5", "AMD Ryzen 7", "AMD Ryzen 9"]
 rams_options = [4, 8, 16, 32, 64]
-storages_options = ["1TB SSD", "2TB SSD", "256GB SSD", "1TB HDD", "512GB SSD"]
+storages_options = ["256GB SSD","512GB SSD","1TB SSD", "2TB SSD",  "1TB HDD"]
 gpus_options = ["Nvidia RTX 3080", "Nvidia RTX 3060", "AMD Radeon RX 6600", "Nvidia RTX 2060", "AMD Radeon RX 6800",
                 "Nvidia GTX 1650", "Integrated"]
 screen_sizes_options = [13.3, 14, 15.6, 16, 17.3]
