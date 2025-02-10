@@ -232,7 +232,7 @@ def update_battery_chart(container):
         fig_battery.update_traces(marker=dict(line=dict(width=1, color="black")))  
 
         container.empty()  
-        container.plotly_chart(fig_battery, use_container_width=True, key="battery_chart")
+        container.plotly_chart(fig_battery, use_container_width=True)
     else:
         container.info("No submission data yet for battery life analysis.")
 

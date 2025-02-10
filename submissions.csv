@@ -15,3 +15,4 @@ Acer,Intel i3,4,256GB SSD,Nvidia RTX 3080,13.3,1366x768,7.0,0.0,Windows
 Microsoft,AMD Ryzen 5,16,512GB SSD,Nvidia GTX 1650,15.6,1920x1080,5.7,1.5,Windows
 Acer,Intel i3,4,256GB SSD,Nvidia RTX 3080,17.3,1920x1080,3.0,0.0,Linux
 Acer,Intel i5,8,512GB SSD,Nvidia GTX 1650,17.3,3840x2160,2.5,0.0,Linux
+Lenovo,AMD Ryzen 7,16,1TB SSD,Integrated,15.6,1920x1080,4.7,3.0,FreeDOS
