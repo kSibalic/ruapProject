@@ -24,7 +24,7 @@ if not st.session_state.authenticated:
         if hasattr(st, "experimental_rerun"):
             st.experimental_rerun()
         else:
-            st.write("Please refresh the page to continue.")
+            st.write("Please, click again on Log In button.")
     else:
         st.stop()
 
@@ -208,6 +208,35 @@ def update_os_chart(container):
 
 update_os_chart(os_chart_container)
 
+battery_chart_container = st.sidebar.empty()
+
+def update_battery_chart(container):
+    if os.path.exists(SUBMISSIONS_FILE):
+        submissions_df = pd.read_csv(SUBMISSIONS_FILE)
+    else:
+        submissions_df = pd.DataFrame()
+
+    if not submissions_df.empty and "Battery_Life_hours" in submissions_df.columns and "Screen_Size_inch" in submissions_df.columns:
+        fig_battery = px.scatter(
+            submissions_df,
+            x="Screen_Size_inch",
+            y="Battery_Life_hours",
+            color="Brand" if "Brand" in submissions_df.columns else None,
+            size="Battery_Life_hours",  
+            hover_name="Brand" if "Brand" in submissions_df.columns else None,
+            title="Battery Life vs. Screen Size",
+            labels={"Screen_Size_inch": "Screen Size (inches)", "Battery_Life_hours": "Battery Life (hours)"},
+        )
+
+        fig_battery.update_traces(marker=dict(line=dict(width=1, color="black")))  
+
+        container.empty()  
+        container.plotly_chart(fig_battery, use_container_width=True, key="battery_chart")
+    else:
+        container.info("No submission data yet for battery life analysis.")
+
+update_battery_chart(battery_chart_container)
+
 # Define input options
 brands_options = ["Acer", "Asus", "Dell", "HP", "Lenovo", "Microsoft", "MSI", "Razer", "Samsung"]
 processors_options = ["Intel i3", "Intel i5", "Intel i7", "Intel i9",
@@ -320,3 +349,4 @@ if st.button("Submit"):
     save_submission(submission_record)
     update_cpu_graph(cpu_graph_container)
     update_os_chart(os_chart_container)
+    update_battery_chart(battery_chart_container)
