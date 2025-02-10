@@ -266,9 +266,8 @@ with col4:
     resolution = st.selectbox("Resolution", resolutions_options)
     operating_system = st.selectbox("Operating System", oss_options)
 with col5:
-    battery_life = st.number_input("Battery Life (hours)", min_value=0.0, step=0.1)
-    weight = st.number_input("Weight (kg)", min_value=0.0, step=0.1)
-
+    battery_life = st.number_input("Battery Life (hours)", min_value=0.0, max_value=13.0, step=0.1)
+    weight = st.number_input("Weight (kg)", min_value=0.0, max_value=4.0, step=0.1)
 
 def save_submission(record):
     df_new = pd.DataFrame([record])
