@@ -40,7 +40,7 @@ with col2:
         if hasattr(st, "experimental_rerun"):
             st.experimental_rerun()
         else:
-            st.write("Please refresh the page to log out.")
+            st.write("Please, click again on Log Out button.")
 
 API_URL = 'http://060fd6ad-695f-4ef8-a9b2-24f8243c2f3d.eastus2.azurecontainer.io/score'
 API_KEY = 'aMv3SZnrX4pkyuwhigofZ3mRG2dvhS2B'  # Replace with your actual API key if needed
@@ -52,13 +52,14 @@ st.markdown(f"""
 Welcome **{st.session_state.username}**!
 
 This app predicts the price of a laptop based on your input specifications.
-It also saves your submission and displays sidebar graphs:
+It also saves your submission and displays sidebar graphs based on all users submissions:
 - **Average Price by Brand** (each brand in a different color)
 - **Price vs. RAM**
-- **5 Most Popular CPUs from Submissions**
+- **5 Most Popular CPUs**
 - **Operating System Distribution**
+- **Battery life based on screen size**
 
-The machine learning models are deployed on Azure Machine Learning.
+The machine learning model is deployed on Azure Machine Learning.
 """)
 
 
