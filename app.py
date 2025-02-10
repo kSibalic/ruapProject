@@ -47,7 +47,7 @@ API_KEY = 'aMv3SZnrX4pkyuwhigofZ3mRG2dvhS2B'  # Replace with your actual API key
 
 SUBMISSIONS_FILE = "submissions.csv"
 
-st.title("Laptop Specification Form & Price Predictor")
+st.title("Laptop Price Predictor")
 st.markdown(f"""
 Welcome **{st.session_state.username}**!
 
